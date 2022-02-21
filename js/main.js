@@ -1,26 +1,12 @@
-function createRandomNumber(firstNumber, secondNumber) {
-  if (firstNumber < 0 || secondNumber < 0) {
-    return 0;
+const createRandomNumber = (min, max) => {
+  if (min >=0 && max >=0 && min !== max && min < max) {
+    return Math.floor(Math.random()  * (max - min + 1) + min);
   }
-  if (firstNumber === secondNumber) {
-    return firstNumber;
-  }
-  if (firstNumber > secondNumber) {
-    const x = firstNumber;
-    firstNumber = secondNumber;
-    secondNumber = x;
-  }
+  return 'Введите число в установленном диапазоне';
+};
 
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-  const randomNumber = Math.random()  * (secondNumber - firstNumber + 1) + firstNumber;
-  return  Math.floor(randomNumber);
-}
+const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
-function lengthIsCorrect(string, maxLength) {
-  return string.length <= maxLength;
-}
-
-console.log(createRandomNumber(10,20));
-
-console.log(lengthIsCorrect('Hello, world!', 13));
+createRandomNumber(10,20);
+checkStringLength('Hello, world!', 13);
 
