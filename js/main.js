@@ -82,7 +82,6 @@ const generateComments = (cardNumber) => {
   for (let i = 0; i < createRandomNumber(1, 10); i++) {
     const obj = {
       id: cardNumber * 100 + i,
-      like: createRandomNumber(15, 200),
       avatar: `img/avatar-${createRandomNumber(1, 25)}.svg`,
       message: generateMassage(),
       name: names[createRandomNumber(0, 24)],
@@ -110,6 +109,7 @@ const generateCard = (cardNumber, photoNumber) => ({
   id: cardNumber,
   url: `photos/${photoNumber}.jpg`,
   description: descriptions[photoNumber - 1],
+  like: createRandomNumber(15, 200),
   comments: generateComments(cardNumber)
 });
 
