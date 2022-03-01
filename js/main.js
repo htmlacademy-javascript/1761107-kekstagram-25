@@ -69,12 +69,27 @@ const descriptions = ['водоем',
   'концерт',
   'сафари'];
 
-const generateComments = () => {
-  const arMassages = [];
+const generateMassage = () => {
+  let massage = '';
   for (let i = 0; i < createRandomNumber(1, 2); i++) {
-    arMassages.push(comments[createRandomNumber(1, 6)]);
+    massage += comments[createRandomNumber(0, 5)];
   }
-  return arMassages;
+  return massage;
+};
+
+const generateComments = (cardNumber) => {
+  const arComments = [];
+  for (let i = 0; i < createRandomNumber(1, 10); i++) {
+    const obj = {
+      id: cardNumber * 100 + i,
+      like: createRandomNumber(15, 200),
+      avatar: `img/avatar-${createRandomNumber(1, 25)}.svg`,
+      message: generateMassage(),
+      name: names[createRandomNumber(0, 24)],
+    };
+    arComments.push(obj);
+  }
+  return arComments;
 };
 
 const getArPhotoId = (countCards) => {
@@ -95,19 +110,16 @@ const generateCard = (cardNumber, photoNumber) => ({
   id: cardNumber,
   url: `photos/${photoNumber}.jpg`,
   description: descriptions[photoNumber - 1],
-  like: createRandomNumber(15, 200),
-  avatar: `img/avatar-${createRandomNumber(1, 25)}.svg`,
-  message: generateComments(),
-  name: names[createRandomNumber(1, 25)],
+  comments: generateComments(cardNumber)
 });
 
 const createCards = (countCards) => {
   const arPhotoId = getArPhotoId(countCards);
   const cards = [];
   for (let i = 0; i < countCards; i++) {
-
     cards.push(generateCard(i + 1, arPhotoId[i]));
   }
+  return cards;
 };
 
 createCards(25);
