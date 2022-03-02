@@ -73,7 +73,7 @@ const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 const createNumberArray = (from, to) => {
   const array = [];
-  for (let i =from; i < to; i++) {
+  for (let i = from; i < to; i++) {
     array.push(i + 1);
   }
   return array;
