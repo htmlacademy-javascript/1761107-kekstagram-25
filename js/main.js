@@ -1,23 +1,14 @@
-const createRandomNumber = (min, max) => {
-  if (min >= 0 && max >= 0 && min <= max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-  return 'Введите число в установленном диапазоне';
-};
-
-const checkStringLength = (string, maxLength) => string.length <= maxLength;
-
-createRandomNumber(10, 20);
-checkStringLength('Hello, world!', 13);
-
-const comments = ['Всё отлично!',
+const CARD_COUNT = 25;
+const COMMENTS = [
+  'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
-  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-
-const names = ['Александр',
+  'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
+];
+const NAMES = [
+  'Александр',
   'Михаил',
   'Дмитрий',
   'Иван',
@@ -41,9 +32,10 @@ const names = ['Александр',
   'Анастасия',
   'Ангелина',
   'Вероника',
-  'Дарья'];
-
-const descriptions = ['водоем',
+  'Дарья'
+];
+const PHOTO_DESCRIPTIONS = [
+  'водоем',
   'указатель на пляж',
   'море',
   'девушка с фотоаппаратом',
@@ -67,60 +59,81 @@ const descriptions = ['водоем',
   'закат',
   'краб',
   'концерт',
-  'сафари'];
+  'сафари'
+];
 
-const generateMassage = () => {
-  let massage = '';
-  for (let i = 0; i < createRandomNumber(1, 2); i++) {
-    massage += comments[createRandomNumber(0, 5)];
+const createRandomNumber = (min, max) => {
+  if (min >= 0 && max >= 0 && min <= max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
-  return massage;
+  return 'Введите число в установленном диапазоне';
+};
+
+const checkStringLength = (string, maxLength) => string.length <= maxLength;
+
+const createNumberArray = (from, to) => {
+  const array = [];
+  for (let i =from; i < to; i++) {
+    array.push(i + 1);
+  }
+  return array;
+};
+
+const shuffleArray = (array) => {
+  const newArray = [];
+  while (array.length > 0) {
+    const i = createRandomNumber(0, array.length - 1);
+    newArray.push(array[i]);
+    array.splice(i, 1);
+  }
+  return newArray;
+};
+
+const generateMessage = () => {
+  let message = '';
+  for (let i = 0; i < createRandomNumber(1, 2); i++) {
+    message += `${COMMENTS[createRandomNumber(0, 5)]} `;
+  }
+  return message.trim();
 };
 
 const generateComments = (cardNumber) => {
-  const arComments = [];
+  const CommentsArray = [];
   for (let i = 0; i < createRandomNumber(1, 10); i++) {
     const obj = {
-      id: cardNumber * 100 + i,
-      avatar: `img/avatar-${createRandomNumber(1, 25)}.svg`,
-      message: generateMassage(),
-      name: names[createRandomNumber(0, 24)],
+      id: cardNumber * 10 + i,
+      avatar: `img/avatar-${createRandomNumber(1, CARD_COUNT)}.svg`,
+      message: generateMessage(),
+      name: NAMES[createRandomNumber(0, NAMES.length - 1)],
     };
-    arComments.push(obj);
+    CommentsArray.push(obj);
   }
-  return arComments;
+  return CommentsArray;
 };
 
-const getArPhotoId = (countCards) => {
-  const arId = [];
-  const arPhotoId = [];
-  for (let i = 0; i < countCards; i++) {
-    arId.push(i + 1);
-  }
-  while (arId.length > 0) {
-    const i = createRandomNumber(0, arId.length - 1);
-    arPhotoId.push(arId[i]);
-    arId.splice(i, 1);
-  }
-  return arPhotoId;
+const getPhotoIdArray = () => {
+  const array = createNumberArray(0,25);
+  return shuffleArray(array);
 };
 
 const generateCard = (cardNumber, photoNumber) => ({
   id: cardNumber,
   url: `photos/${photoNumber}.jpg`,
-  description: descriptions[photoNumber - 1],
+  description: PHOTO_DESCRIPTIONS[photoNumber - 1],
   like: createRandomNumber(15, 200),
   comments: generateComments(cardNumber)
 });
 
-const createCards = (countCards) => {
-  const arPhotoId = getArPhotoId(countCards);
+const createCards = () => {
+  const PhotoIdArray = getPhotoIdArray();
   const cards = [];
-  for (let i = 0; i < countCards; i++) {
-    cards.push(generateCard(i + 1, arPhotoId[i]));
+  for (let i = 0; i < CARD_COUNT; i++) {
+    cards.push(generateCard(i + 1, PhotoIdArray[i]));
   }
   return cards;
 };
 
-createCards(25);
+createRandomNumber(10, 20);
+checkStringLength('Hello, world!', 13);
+createCards();
 
