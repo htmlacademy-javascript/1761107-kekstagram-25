@@ -1,6 +1,7 @@
 import {createRandomNumber, createNumberArray, shuffleArray} from './util.js';
 
 const CARD_COUNT = 25;
+
 const COMMENTS = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -9,6 +10,7 @@ const COMMENTS = [
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
+
 const NAMES = [
   'Александр',
   'Михаил',
@@ -99,7 +101,7 @@ const generateCard = (cardNumber, photoNumber) => ({
   comments: generateComments(cardNumber)
 });
 
-const createCards = () => {
+export const createCards = () => {
   const PhotoIdArray = getPhotoIdArray();
   const cards = [];
   for (let i = 0; i < CARD_COUNT; i++) {
@@ -107,5 +109,3 @@ const createCards = () => {
   }
   return cards;
 };
-
-createCards();
