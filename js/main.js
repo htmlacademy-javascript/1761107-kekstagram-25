@@ -1,3 +1,3 @@
-import {createCards} from'./data.js';
+import { fillPhotoGallery } from './pictures.js';
 
-createCards();
+fillPhotoGallery();
