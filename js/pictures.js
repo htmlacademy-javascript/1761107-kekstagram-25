@@ -8,7 +8,6 @@ const createPictureElement = ({ id, url, like, comments }) => {
   const pictureElement = pictureTemplate.cloneNode(true);
   const imgElement = pictureElement.querySelector('.picture__img');
   imgElement.src = url;
-  imgElement.dataset.id = id;
   pictureElement.querySelector('.picture__comments').textContent = comments.length;
   pictureElement.querySelector('.picture__likes').textContent = like;
 
