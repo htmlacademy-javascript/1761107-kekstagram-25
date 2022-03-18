@@ -12,16 +12,14 @@ const comment = document.querySelector('.text__description');
 
 //!!!ДОДЕЛАТЬ
 //создает из строки массив с разделителем - люое количество пробелов
-const createHashtagsArray = (hashtagsString) => {
-  return hashtagsString.split(' ');
-  //const hashtagsArray = hashtagsString.split(' ');
-  // return hashtagsArray.map((item) => {
-  //   //создает массив без элементов с пробелами или !!!ДОБАВИТЬпустыми(когда 2 пробела и между ними пустой элемент)
-  //   if (!item.match(/^ +$/)) {
-  //     return item;
-  //   }
-  // });
-};
+const createHashtagsArray = (hashtagsString) => hashtagsString.split(' ');
+//const hashtagsArray = hashtagsString.split(' ');
+// return hashtagsArray.map((item) => {
+//   //создает массив без элементов с пробелами или !!!ДОБАВИТЬпустыми(когда 2 пробела и между ними пустой элемент)
+//   if (!item.match(/^ +$/)) {
+//     return item;
+//   }
+// });
 
 const CHECKLIST = [
   {
