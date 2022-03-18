@@ -1403,3 +1403,7 @@ main {
 .hidden {
   display: none;
 }
+
+.pristine-error {
+  display: table;
+}

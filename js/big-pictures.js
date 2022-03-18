@@ -1,33 +1,47 @@
 import { cards } from './data.js';
+import { generateModalFunctions } from './modal-window.js';
 
 const bigPictureContainer = document.querySelector('.big-picture');
 const bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 const socialComments = document.querySelector('.social__comments');
 
-const closeBigPicture = () => {
-  bigPictureContainer.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-};
+// const onDocumentKeydown = (evt) => {
+//   if (evt.keyCode === 27) {
+//     evt.preventDefault();
+//     closeBigPicture();
+//   }
+// };
 
-bigPictureCloseBtn.addEventListener('click', () => {
-  closeBigPicture();
-});
+// const onBigPictureCloseBtnClick = (evt) => {
+//   evt.preventDefault();
+//   closeBigPicture();
+// };
 
-document.addEventListener('keydown', (evt) => {
-  if (evt.keyCode === 27) {
-    closeBigPicture();
-  }
-});
+// const addModalListners = () => {
+//   bigPictureCloseBtn.addEventListener('click', onBigPictureCloseBtnClick);
+//   document.addEventListener('keydown', onDocumentKeydown);
+// };
 
-const showModalWindow = () => {
-  bigPictureContainer.classList.remove('hidden');
-  bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
-  bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
-  document.body.classList.add('modal-open');
-};
+// const removeModalListners = () => {
+//   bigPictureCloseBtn.removeEventListener('click', onBigPictureCloseBtnClick);
+//   document.removeEventListener('keydown', onDocumentKeydown);
+// };
+
+// const closeBigPicture = () => {
+//   bigPictureContainer.classList.add('hidden');
+//   document.body.classList.remove('modal-open');
+//   removeModalListners();
+// };
+
+// const showModalWindow = () => {
+//   bigPictureContainer.classList.remove('hidden');
+//   bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
+//   bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
+//   document.body.classList.add('modal-open');
+// };
 
 const fillBigPictureContainer = (card) => {
-  bigPictureContainer.querySelector('.big-picture__img').children[0].src = card.url;
+  bigPictureContainer.querySelector('.big-picture__img img').src = card.url;
   bigPictureContainer.querySelector('.likes-count').textContent = card.like;
   bigPictureContainer.querySelector('.comments-count').textContent = card.comments.length;
   bigPictureContainer.querySelector('.social__caption').textContent = card.description;
@@ -69,8 +83,12 @@ const fillBigPicture = (idCard) => {
   const card = cards.find((element) => (element.id === idCard));
   fillBigPictureContainer(card);
   generateComments(card);
-  showModalWindow();
-
+  //временный фанкционал
+  bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
+  bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
+  //
+  const bigPictureModal = generateModalFunctions(bigPictureContainer, bigPictureCloseBtn);
+  bigPictureModal.showModalWindow();
 };
 
 export { fillBigPicture };

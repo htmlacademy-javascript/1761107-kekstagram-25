@@ -6,12 +6,13 @@ const picturesContainer = document.querySelector('.pictures');
 
 const createPictureElement = ({ id, url, like, comments }) => {
   const pictureElement = pictureTemplate.cloneNode(true);
+  const pictureLink = pictureElement.querySelector('.picture');
   const imgElement = pictureElement.querySelector('.picture__img');
   imgElement.src = url;
   pictureElement.querySelector('.picture__comments').textContent = comments.length;
   pictureElement.querySelector('.picture__likes').textContent = like;
 
-  pictureElement.children[0].addEventListener('click', () => {
+  pictureLink.addEventListener('click', () => {
     fillBigPicture(id);
   });
 
