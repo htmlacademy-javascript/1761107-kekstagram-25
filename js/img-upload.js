@@ -75,13 +75,11 @@ const pristine = new Pristine(imgUploadForm, {
   errorTextClass: 'form__error'
 });
 
-//проверяем на корректность хэш-теги по массиву правил
 CHECKLIST.forEach((check) => {
   pristine.addValidator(hashtags, check.validation, check.errorText);
 });
 
 const validateForm = (evt) => {
-  //проверяем, что инпут не пустой
   if (hashtags.value.length !== 0) {
     if (!pristine.validate()) {
       evt.preventDefault();

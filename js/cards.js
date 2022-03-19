@@ -77,7 +77,7 @@ const generateMessage = () => {
 
 const generateComments = (cardNumber) => {
   const CommentsArray = [];
-  for (let i = 0; i < createRandomNumber(1, 10); i++) {
+  for (let i = 0; i < createRandomNumber(1, 30); i++) {
     const obj = {
       id: cardNumber * 10 + i,
       avatar: `img/avatar-${createRandomNumber(1, AVATAR_COUNT)}.svg`,
