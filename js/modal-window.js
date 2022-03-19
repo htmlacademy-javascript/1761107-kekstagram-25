@@ -1,4 +1,4 @@
-const generateModalFunctions = (modalWindow, closeBtn, onCloseFn = null) => {
+const generateModalFunctions = (modalWindow, closeBtn, overlay, onCloseFn = null) => {
 
   //4. закрывает модальное окно
   const closeModalWindow = () => {
@@ -24,26 +24,36 @@ const generateModalFunctions = (modalWindow, closeBtn, onCloseFn = null) => {
     closeModalWindow();
   };
 
+  //3. нажатие на область вне модального окна
+  const onOverlayClick = (evt) => {
+    if (evt.target === evt.currentTarget) {
+      evt.preventDefault();
+      closeModalWindow();
+    }
+  };
+
   //2. добавляет слушатели на закрытие
   const addModalListners = () => {
     closeBtn.addEventListener('click', onCloseBtnClick);
     document.addEventListener('keydown', onDocumentKeydown);
+    overlay.addEventListener('click', onOverlayClick);
   };
 
   //5. удаляет слушатели
   function removeModalListners() {
     closeBtn.removeEventListener('click', onCloseBtnClick);
     document.removeEventListener('keydown', onDocumentKeydown);
+    overlay.removeEventListener('click', onOverlayClick);
   }
 
   //1. открывает модальное окно
-  const showModalWindow = ( ) => {
+  const showModalWindow = () => {
     modalWindow.classList.remove('hidden');
     document.body.classList.add('modal-open');
     addModalListners();
   };
 
-  return { showModalWindow } ;
+  return { showModalWindow };
 };
 
 export { generateModalFunctions };

@@ -9,19 +9,29 @@ const scaleControl = document.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
 const hashtags = document.querySelector('.text__hashtags');
 const comment = document.querySelector('.text__description');
+const overlay = document.querySelector('.img-upload__overlay');
 
-//!!!ДОДЕЛАТЬ
 //создает из строки массив с разделителем - люое количество пробелов
-const createHashtagsArray = (hashtagsString) => hashtagsString.split(' ');
-//const hashtagsArray = hashtagsString.split(' ');
-// return hashtagsArray.map((item) => {
-//   //создает массив без элементов с пробелами или !!!ДОБАВИТЬпустыми(когда 2 пробела и между ними пустой элемент)
-//   if (!item.match(/^ +$/)) {
-//     return item;
-//   }
-// });
+const createHashtagsArray = (hashtagsString) => {
+  const newArray = hashtagsString.split(/\s* \s*/);
+  //удаляем последний элемент в массиве, если в конце строки было больше 1 пробела
+  return newArray.filter((item) => item !== '');
+};
 
 const CHECKLIST = [
+  {
+    validation(string) {
+      return createHashtagsArray(string).length <= 5;
+    },
+    errorText: 'количество хэш-тегов не должно быть больше 5'
+  },
+  {
+    validation(string) {
+      const hashtagsArray = createHashtagsArray(string);
+      return new Set(hashtagsArray.map((item) => item.toLowerCase())).size === hashtagsArray.length;
+    },
+    errorText: 'хэш-теги не должны повторяться'
+  },
   {
     validation(string) {
       return createHashtagsArray(string).some((item) => item[0] === '#');
@@ -58,74 +68,29 @@ const CHECKLIST = [
   }
 ];
 
-// const validateHashtags = (hashtagsArray) => {
-//   const errorMessages = [];
-//   //проверяем количество хэш-тегов
-//   if (hashtagsArray.length > 5) {
-//     errorMessages.push('количество хэш-тегов не должно быть больше 5');
-//   }
-//   //проверяем на уникальность
-//   if (new Set(hashtagsArray.map((item) => item.toLowerCase())).size !== hashtagsArray.length) {
-//     errorMessages.push('хэш-теги не должны повторяться');
-//   }
-//   //проверяем корректность каждого хэш-тега
-//   CHECKLIST.forEach((check) => {
-//     if (check.validation(hashtagsArray)) {
-//       errorMessages.push(check.errorText);
-//     }
-//   });
-//   return errorMessages.join(', ');
-// };
-
-// const checkHashtags = () => {
-//   imgUploadForm.addEventListener('submit', (evt) => {
-//     //проверяем что инпут не пустой
-//     if (hashtags.value.length !== 0) {
-//       //разделяем строку на элементы массива
-//       const hashtagsArray = hashtags.value.split(' ');
-//       //еще нужно удалить элементы массива с пустыми пробелами и его потом заполнить в value!!!!!!
-//       const errorMessage = validateHashtags(hashtagsArray);
-//       if (errorMessage.length) {
-//         evt.preventDefault();
-//         console.log(validateHashtags(hashtagsArray));
-//       }
-//     }
-//   }
-//   );
-// };
-
-// checkHashtags();
-
-//pristine example
-
-const imgUploadFormPristine = new Pristine(imgUploadForm, {
+const pristine = new Pristine(imgUploadForm, {
   classTo: 'img-upload__text',
   errorTextParent: 'text__hashtags-container',
   errorTextTag: 'span',
   errorTextClass: 'form__error'
 });
 
-//проверяем количество хэш-тегов
-imgUploadFormPristine.addValidator(hashtags, (value) => createHashtagsArray(value).length <= 5, 'количество хэш-тегов не должно быть больше 5');
-
-//проверяем на уникальность
-imgUploadFormPristine.addValidator(hashtags, (value) => {
-  const hashtagsArray = createHashtagsArray(value);
-  return new Set(hashtagsArray.map((item) => item.toLowerCase())).size === hashtagsArray.length;
-
-}, 'хэш-теги не должны повторяться');
-
-//проверяем корректность каждый хэш-тег
+//проверяем на корректность хэш-теги по массиву правил
 CHECKLIST.forEach((check) => {
-  imgUploadFormPristine.addValidator(hashtags, check.validation, check.errorText);
+  pristine.addValidator(hashtags, check.validation, check.errorText);
 });
 
-imgUploadForm.addEventListener('submit', (evt) => {
+const validateForm = (evt) => {
   //проверяем, что инпут не пустой
   if (hashtags.value.length !== 0) {
-    evt.preventDefault();
-    imgUploadFormPristine.validate();
+    if (!pristine.validate()) {
+      evt.preventDefault();
+    }
   }
+};
+
+imgUploadForm.addEventListener('submit', (evt) => {
+  validateForm(evt);
 });
 
 const stopBubling = (evt) => {
@@ -143,6 +108,7 @@ comment.addEventListener('keydown', (evt) => {
   stopBubling(evt);
 });
 
+//приведение полей к значениям по умолчанию, после закрытия модального окна
 const clearImgUpload = () => {
   uploadFile.value = '';
   scaleControl.value = 100;
@@ -151,8 +117,10 @@ const clearImgUpload = () => {
 
 const onUploadFileChage = (evt) => {
   evt.preventDefault();
+  //временное решение, это нужно к след домашке
   imgPreview.src = URL.createObjectURL(evt.target.files[0]);
-  const editImgModal = generateModalFunctions(imgUploadContainer, editImgCloseBtn, clearImgUpload);
+  //
+  const editImgModal = generateModalFunctions(imgUploadContainer, editImgCloseBtn, overlay, clearImgUpload);
   editImgModal.showModalWindow();
 };
 

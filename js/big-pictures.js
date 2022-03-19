@@ -5,41 +5,6 @@ const bigPictureContainer = document.querySelector('.big-picture');
 const bigPictureCloseBtn = document.querySelector('.big-picture__cancel');
 const socialComments = document.querySelector('.social__comments');
 
-// const onDocumentKeydown = (evt) => {
-//   if (evt.keyCode === 27) {
-//     evt.preventDefault();
-//     closeBigPicture();
-//   }
-// };
-
-// const onBigPictureCloseBtnClick = (evt) => {
-//   evt.preventDefault();
-//   closeBigPicture();
-// };
-
-// const addModalListners = () => {
-//   bigPictureCloseBtn.addEventListener('click', onBigPictureCloseBtnClick);
-//   document.addEventListener('keydown', onDocumentKeydown);
-// };
-
-// const removeModalListners = () => {
-//   bigPictureCloseBtn.removeEventListener('click', onBigPictureCloseBtnClick);
-//   document.removeEventListener('keydown', onDocumentKeydown);
-// };
-
-// const closeBigPicture = () => {
-//   bigPictureContainer.classList.add('hidden');
-//   document.body.classList.remove('modal-open');
-//   removeModalListners();
-// };
-
-// const showModalWindow = () => {
-//   bigPictureContainer.classList.remove('hidden');
-//   bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
-//   bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
-//   document.body.classList.add('modal-open');
-// };
-
 const fillBigPictureContainer = (card) => {
   bigPictureContainer.querySelector('.big-picture__img img').src = card.url;
   bigPictureContainer.querySelector('.likes-count').textContent = card.like;
@@ -87,7 +52,7 @@ const fillBigPicture = (idCard) => {
   bigPictureContainer.querySelector('.social__comment-count').classList.add('hidden');
   bigPictureContainer.querySelector('.comments-loader').classList.add('hidden');
   //
-  const bigPictureModal = generateModalFunctions(bigPictureContainer, bigPictureCloseBtn);
+  const bigPictureModal = generateModalFunctions(bigPictureContainer, bigPictureCloseBtn, bigPictureContainer);
   bigPictureModal.showModalWindow();
 };
 
