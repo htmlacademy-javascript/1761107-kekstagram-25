@@ -1,5 +1,6 @@
 import { cards } from './data.js';
 import { isEscapeKey, stopBubbling } from './util.js';
+import { FocusLock } from './focus-lock.js';
 
 const LOADABLE_COMMENTS_COUNT = 5;
 const PICTURE_WIDTH = 35;
@@ -10,6 +11,8 @@ const socialComments = document.querySelector('.social__comments');
 const socialCommentsCurrentCount = document.querySelector('.social__comment-count');
 const commentLoaderBtn = document.querySelector('.social__comments-loader');
 const commentInput = document.querySelector('.social__footer-text');
+
+const focusLock = new FocusLock;
 
 let displayedCommentsCount = 0;
 let comments;
@@ -51,33 +54,21 @@ const renderComments = (groupComments) => {
   socialComments.append(listComments);
 };
 
-
 const closeModalWindow = () => {
   bigPictureContainer.classList.add('hidden');
   document.body.classList.remove('modal-open');
   removeModalListeners();
 };
 
-const onDocumentKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeModalWindow();
-  }
-};
-
-const onModalClick = (evt) => {
-  if (evt.target === evt.currentTarget || evt.target.closest('.cancel')) {
-    evt.preventDefault();
-    closeModalWindow();
-  }
-};
-
 const updateCommentLoaderBtn = () => {
   if (displayedCommentsCount === comments.length) {
     commentLoaderBtn.classList.add('hidden');
+    commentLoaderBtn.disabled = true;
+    focusLock.lock('.big-picture', false);
     return;
   }
   commentLoaderBtn.classList.remove('hidden');
+  commentLoaderBtn.disabled = false;
 };
 
 const showComments = (from, to) => {
@@ -94,6 +85,20 @@ const onCommentLoaderBtnClick = (evt) => {
   showComments(displayedCommentsCount, displayedCommentsCount + LOADABLE_COMMENTS_COUNT);
 };
 
+const onDocumentKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeModalWindow();
+  }
+};
+
+const onModalClick = (evt) => {
+  if (evt.target === evt.currentTarget || evt.target.closest('.cancel')) {
+    evt.preventDefault();
+    closeModalWindow();
+  }
+};
+
 const addModalListeners = () => {
   bigPictureContainer.addEventListener('click', onModalClick);
   document.addEventListener('keydown', onDocumentKeydown);
@@ -105,14 +110,15 @@ const openModal = () => {
   bigPictureContainer.classList.remove('hidden');
   document.body.classList.add('modal-open');
   addModalListeners();
+  focusLock.lock('.big-picture', false);
 };
 
-function removeModalListeners() {
+const removeModalListeners = () => {
   bigPictureContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   commentInput.removeEventListener('keydown', stopBubbling);
   commentLoaderBtn.removeEventListener('click', onCommentLoaderBtnClick);
-}
+};
 
 const fillBigPicture = (idCard) => {
   const card = cards.find((element) => (element.id === idCard));
