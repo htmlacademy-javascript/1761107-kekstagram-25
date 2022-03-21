@@ -110,13 +110,13 @@ const openModal = () => {
   focusLock.lock('.img-upload__overlay', false);
 };
 
-const removeModalListeners = () => {
+function removeModalListeners () {
   imgUploadContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   hashtags.removeEventListener('keydown', stopBubbling);
   comment.removeEventListener('keydown', stopBubbling);
   imgUploadForm.removeEventListener('submit', validateForm);
-};
+}
 
 const onUploadFileChange = (evt) => {
   evt.preventDefault();

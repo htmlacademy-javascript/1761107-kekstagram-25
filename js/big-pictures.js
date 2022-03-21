@@ -113,12 +113,12 @@ const openModal = () => {
   focusLock.lock('.big-picture', false);
 };
 
-const removeModalListeners = () => {
+function removeModalListeners () {
   bigPictureContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   commentInput.removeEventListener('keydown', stopBubbling);
   commentLoaderBtn.removeEventListener('click', onCommentLoaderBtnClick);
-};
+}
 
 const fillBigPicture = (idCard) => {
   const card = cards.find((element) => (element.id === idCard));
