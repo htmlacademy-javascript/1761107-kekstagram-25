@@ -25,6 +25,15 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+const stopBubbling = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+};
+
 checkStringLength('Hello, world!', 13);
 
-export {createRandomNumber, createNumberArray, shuffleArray};
+export {createRandomNumber, createNumberArray, shuffleArray, isEscapeKey, stopBubbling};

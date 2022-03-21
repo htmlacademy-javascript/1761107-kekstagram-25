@@ -1,10 +1,10 @@
-const generateModalFunctions = (modalWindow, closeBtn, overlay, onCloseFn = null) => {
+const generateModalFunctions = (modalWindow, closeBtn, onCloseFn = false) => {
 
   //4. закрывает модальное окно
   const closeModalWindow = () => {
     modalWindow.classList.add('hidden');
     document.body.classList.remove('modal-open');
-    removeModalListners();
+    removeModalListeners();
     if (onCloseFn !== null) {
       onCloseFn();
     }
@@ -33,24 +33,24 @@ const generateModalFunctions = (modalWindow, closeBtn, overlay, onCloseFn = null
   };
 
   //2. добавляет слушатели на закрытие
-  const addModalListners = () => {
+  const addModalListeners = () => {
     closeBtn.addEventListener('click', onCloseBtnClick);
     document.addEventListener('keydown', onDocumentKeydown);
-    overlay.addEventListener('click', onOverlayClick);
+    modalWindow.addEventListener('click', onOverlayClick);
   };
 
   //5. удаляет слушатели
-  function removeModalListners() {
+  function removeModalListeners() {
     closeBtn.removeEventListener('click', onCloseBtnClick);
     document.removeEventListener('keydown', onDocumentKeydown);
-    overlay.removeEventListener('click', onOverlayClick);
+    modalWindow.removeEventListener('click', onOverlayClick);
   }
 
   //1. открывает модальное окно
   const showModalWindow = () => {
     modalWindow.classList.remove('hidden');
     document.body.classList.add('modal-open');
-    addModalListners();
+    addModalListeners();
   };
 
   return { showModalWindow };
