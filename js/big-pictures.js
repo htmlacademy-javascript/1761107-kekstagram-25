@@ -99,10 +99,14 @@ const onModalClick = (evt) => {
   }
 };
 
+const onCommentInputKeydown = (evt) => {
+  stopBubbling(evt);
+};
+
 const addModalListeners = () => {
   bigPictureContainer.addEventListener('click', onModalClick);
   document.addEventListener('keydown', onDocumentKeydown);
-  commentInput.addEventListener('keydown', stopBubbling);
+  commentInput.addEventListener('keydown', onCommentInputKeydown);
   commentLoaderBtn.addEventListener('click', onCommentLoaderBtnClick);
 };
 
@@ -116,7 +120,7 @@ const openModal = () => {
 function removeModalListeners () {
   bigPictureContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
-  commentInput.removeEventListener('keydown', stopBubbling);
+  commentInput.removeEventListener('keydown', onCommentInputKeydown);
   commentLoaderBtn.removeEventListener('click', onCommentLoaderBtnClick);
 }
 

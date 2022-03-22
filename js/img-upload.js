@@ -1,7 +1,8 @@
 import { isEscapeKey, stopBubbling } from './util.js';
 import { FocusLock } from './focus-lock.js';
 
-const FILE_UPLOAD_NUMBER = 0;
+const MAX_HASH_COUNTER = 5;
+const MAX_HASH_LENGTH = 20;
 
 const uploadFile = document.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('.img-upload__form');
@@ -9,10 +10,17 @@ const imgUploadContainer = document.querySelector('.img-upload__overlay');
 const imgPreview = document.querySelector('.img-upload__preview img');
 const scaleControl = document.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
-const hashtags = document.querySelector('.text__hashtags');
-const comment = document.querySelector('.text__description');
+const hashtagInput = document.querySelector('.text__hashtags');
+const commentTextarea = document.querySelector('.text__description');
 
 const focusLock = new FocusLock;
+
+const pristine = new Pristine(imgUploadForm, {
+  classTo: 'text__hashtags-container',
+  errorTextParent: 'text__hashtags-container',
+  errorTextTag: 'span',
+  errorTextClass: 'form__error'
+});
 
 //создает из строки массив с разделителем - "любое количество пробелов"
 const createHashtagsArray = (hashtagsString) => {
@@ -23,7 +31,7 @@ const createHashtagsArray = (hashtagsString) => {
 
 const CHECKLIST = [
   {
-    validation: (stringComments) => createHashtagsArray(stringComments).length <= 5,
+    validation: (stringComments) => createHashtagsArray(stringComments).length <= MAX_HASH_COUNTER,
     errorText: 'количество хэш-тегов не должно быть больше 5'
   },
   {
@@ -42,7 +50,7 @@ const CHECKLIST = [
     errorText: 'хэш-тег не может быть пустым'
   },
   {
-    validation: (stringComments) => createHashtagsArray(stringComments).every((item) => item.length <= 20),
+    validation: (stringComments) => createHashtagsArray(stringComments).every((item) => item.length <= MAX_HASH_LENGTH),
     errorText: 'длина хэш-тега не должна превышать 20 символов'
   },
   {
@@ -51,21 +59,22 @@ const CHECKLIST = [
   }
 ];
 
-const pristine = new Pristine(imgUploadForm, {
-  classTo: 'img-upload__text',
-  errorTextParent: 'text__hashtags-container',
-  errorTextTag: 'span',
-  errorTextClass: 'form__error'
-});
-
 CHECKLIST.forEach((check) => {
-  pristine.addValidator(hashtags, check.validation, check.errorText);
+  pristine.addValidator(hashtagInput, check.validation, check.errorText);
 });
 
-const validateForm = (evt) => {
-  if (hashtags.value.length && !pristine.validate()) {
+const onUploadFormSubmit = (evt) => {
+  if (hashtagInput.value.length && !pristine.validate()) {
     evt.preventDefault();
   }
+};
+
+const onHashtagsInputKeydown= (evt) => {
+  stopBubbling(evt);
+};
+
+const onCommentTextareaKeydown = (evt) => {
+  stopBubbling(evt);
 };
 
 const clearImgUpload = () => {
@@ -98,9 +107,9 @@ const onModalClick = (evt) => {
 const addModalListeners = () => {
   imgUploadContainer.addEventListener('click', onModalClick);
   document.addEventListener('keydown', onDocumentKeydown);
-  hashtags.addEventListener('keydown', stopBubbling);
-  comment.addEventListener('keydown', stopBubbling);
-  imgUploadForm.addEventListener('submit', validateForm);
+  hashtagInput.addEventListener('keydown', onHashtagsInputKeydown);
+  commentTextarea.addEventListener('keydown', onCommentTextareaKeydown);
+  imgUploadForm.addEventListener('submit', onUploadFormSubmit);
 };
 
 const openModal = () => {
@@ -113,15 +122,17 @@ const openModal = () => {
 function removeModalListeners () {
   imgUploadContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
-  hashtags.removeEventListener('keydown', stopBubbling);
-  comment.removeEventListener('keydown', stopBubbling);
-  imgUploadForm.removeEventListener('submit', validateForm);
+  hashtagInput.removeEventListener('keydown', onHashtagsInputKeydown);
+  commentTextarea.removeEventListener('keydown', onCommentTextareaKeydown);
+  imgUploadForm.removeEventListener('submit', onUploadFormSubmit);
 }
 
 const onUploadFileChange = (evt) => {
   evt.preventDefault();
-  imgPreview.src = URL.createObjectURL(evt.target.files[FILE_UPLOAD_NUMBER]);
+  imgPreview.src = URL.createObjectURL(evt.target.files[0]);
   openModal();
 };
 
-uploadFile.addEventListener('change', onUploadFileChange);
+export const initUploading = () => {
+  uploadFile.addEventListener('change', onUploadFileChange);
+};
