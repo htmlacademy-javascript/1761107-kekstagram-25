@@ -22,10 +22,8 @@ const pristine = new Pristine(imgUploadForm, {
   errorTextClass: 'form__error'
 });
 
-//создает из строки массив с разделителем - "любое количество пробелов"
 const createHashtagsArray = (hashtagsString) => {
   const newArray = hashtagsString.split(/\s* \s*/);
-  //удаляет пустые элементы в массиве, если в конце или начале строки были пробелы
   return newArray.filter((item) => item !== '');
 };
 
