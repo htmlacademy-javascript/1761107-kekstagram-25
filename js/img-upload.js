@@ -12,6 +12,7 @@ const scaleControl = document.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentTextarea = document.querySelector('.text__description');
+const effectLevelSlider = document.querySelector('.effect-level__slider');
 
 const focusLock = new FocusLock;
 
@@ -113,6 +114,7 @@ const addModalListeners = () => {
 const openModal = () => {
   imgUploadContainer.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  effectLevelSlider.setAttribute('disabled', true);
   addModalListeners();
   focusLock.lock('.img-upload__overlay', false);
 };

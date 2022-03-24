@@ -1416,3 +1416,12 @@ main {
 .hidden {
   display: none;
 }
+
+.pristine-error {
+  display: block;
+  margin: 0 auto;
+  text-align: left;
+  width: 450px;
+  font-size: 12px;
+  color: #e90000;
+}
