@@ -83,6 +83,7 @@ const clearImgUpload = () => {
 const closeModalWindow = () => {
   imgUploadContainer.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  imgPreview.src = '';
   removeModalListeners();
   clearImgUpload();
 };

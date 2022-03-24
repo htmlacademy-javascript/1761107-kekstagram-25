@@ -200,7 +200,7 @@ const initEffectLevelSlider = () => {
 };
 
 export const initImgEditing = () => {
-  scaleControlInput.value = 100;
+  scaleControlInput.value = '100 %';
   scaleControlSmallerBtn.addEventListener('click', onScaleControlSmallerBtnClick);
   scaleControlBiggerBtn.addEventListener('click', onScaleControlBiggerBtnClick);
   effectList.addEventListener('click', onEffectListClick);
