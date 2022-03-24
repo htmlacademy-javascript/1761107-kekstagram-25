@@ -1,5 +1,6 @@
 import { isEscapeKey, stopBubbling } from './util.js';
 import { FocusLock } from './focus-lock.js';
+import { initImgEditing, removeImgEditingListeners } from './img-editing.js';
 
 const MAX_HASH_COUNTER = 5;
 const MAX_HASH_LENGTH = 20;
@@ -8,11 +9,9 @@ const uploadFile = document.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadContainer = document.querySelector('.img-upload__overlay');
 const imgPreview = document.querySelector('.img-upload__preview img');
-const scaleControl = document.querySelector('.scale__control--value');
 const effectNone = document.querySelector('#effect-none');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentTextarea = document.querySelector('.text__description');
-const effectLevelSlider = document.querySelector('.effect-level__slider');
 
 const focusLock = new FocusLock;
 
@@ -78,7 +77,6 @@ const onCommentTextareaKeydown = (evt) => {
 
 const clearImgUpload = () => {
   uploadFile.value = '';
-  scaleControl.value = 100;
   effectNone.checked = true;
 };
 
@@ -114,8 +112,8 @@ const addModalListeners = () => {
 const openModal = () => {
   imgUploadContainer.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  effectLevelSlider.setAttribute('disabled', true);
   addModalListeners();
+  initImgEditing();
   focusLock.lock('.img-upload__overlay', false);
 };
 
@@ -125,6 +123,7 @@ function removeModalListeners () {
   hashtagInput.removeEventListener('keydown', onHashtagsInputKeydown);
   commentTextarea.removeEventListener('keydown', onCommentTextareaKeydown);
   imgUploadForm.removeEventListener('submit', onUploadFormSubmit);
+  removeImgEditingListeners();
 }
 
 const onUploadFileChange = (evt) => {

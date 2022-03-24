@@ -1,14 +1,6 @@
 const MIN_VALUE_SCALE_CONTROL = 25;
 const MAX_VALUE_SCALE_CONTROL = 100;
 const STEP_SCALE = 25;
-const EFFECTS = {
-  'effect-none'   : 'effects__preview--none',
-  'effect-chrome' : 'effects__preview--chrome',
-  'effect-sepia'  : 'effects__preview--sepia',
-  'effect-marvin' : 'effects__preview--marvin',
-  'effect-phobos' : 'effects__preview--phobos',
-  'effect-heat'   : 'effects__preview--heat'
-};
 
 const imgUploadPreview = document.querySelector('.img-upload__preview img');
 const scaleControlSmallerBtn = document.querySelector('.scale__control--smaller');
@@ -17,21 +9,105 @@ const scaleControlInput = document.querySelector('.scale__control--value');
 const effectLevelValue = document.querySelector('.effect-level__value');
 const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectList = document.querySelector('.effects__list');
-const effectLevelFieldset = document.querySelector('.img-upload__effect-level');
 
-noUiSlider.create(effectLevelSlider, {
-  range: {
-    min: 0,
-    max: 1,
+let currentEffect;
+
+const EFFECTS = [
+  {
+    id: 'effect-none',
+    className: 'effects__preview--none',
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(0),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: () => '',
   },
-  start: 1,
-  step: 0.1,
-  connect: 'lower',
-});
-
-effectLevelSlider.noUiSlider.on('update', (...rest) => {
-  effectLevelValue.value = effectLevelSlider.noUiSlider.get();
-});
+  {
+    id: 'effect-chrome',
+    className: 'effects__preview--chrome',
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    connect: 'lower', format: {
+      to: (value) => value.toFixed(1),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: (scale) => `grayscale(${scale})`
+  },
+  {
+    id: 'effect-sepia',
+    className: 'effects__preview--sepia',
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(1),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: (scale) =>`sepia(${scale})`
+  },
+  {
+    id: 'effect-marvin',
+    className: 'effects__preview--marvin',
+    range: {
+      min: 0,
+      max: 100,
+    },
+    start: 100,
+    step: 1,
+    connect: 'lower', format: {
+      to: (value) => value.toFixed(0),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: (scale) => `invert(${scale}%)`
+  },
+  {
+    id: 'effect-phobos',
+    className: 'effects__preview--phobos',
+    range: {
+      min: 0,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(1),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: (scale) => `blur(${scale}px)`
+  },
+  {
+    id: 'effect-heat',
+    className: 'effects__preview--heat',
+    range: {
+      min: 1,
+      max: 3,
+    },
+    start: 3,
+    step: 0.1,
+    connect: 'lower',
+    format: {
+      to: (value) => value.toFixed(1),
+      from: (value) => parseFloat(value)
+    },
+    getScaleFilter: (scale) => `brightness(${scale})`
+  }
+];
 
 const changeControlValue = (bigger = false) => {
   const currentScaleValue = parseInt(scaleControlInput.value, 10);
@@ -53,39 +129,87 @@ const onScaleControlSmallerBtnClick = (evt) => {
   changeControlValue();
 };
 
-const scaleControlBiggerBtnClick = (evt) => {
+const onScaleControlBiggerBtnClick = (evt) => {
   evt.preventDefault();
   changeControlValue(true);
 };
 
-export const initImgEditing = () => {
-  scaleControlSmallerBtn.addEventListener('click', onScaleControlSmallerBtnClick);
-  scaleControlBiggerBtn.addEventListener('click', scaleControlBiggerBtnClick);
+const onEffectLevelSliderUpdate = () => {
+  const scale = effectLevelSlider.noUiSlider.get();
+  effectLevelValue.value = scale;
+  imgUploadPreview.style.filter = currentEffect.getScaleFilter(scale);
 };
 
-const showSlider = (effectID) => {
-  if (effectID === 'effect-none') {
-    effectLevelSlider.setAttribute('disabled', true);
-    return;
-  }
-  effectLevelSlider.removeAttribute('disabled');
+const createSlider = () => {
+  noUiSlider.create(effectLevelSlider, {
+    range: currentEffect.range,
+    start: currentEffect.start,
+    step: currentEffect.step,
+    connect: currentEffect.connect,
+    format: currentEffect.format
+  });
 };
 
-const setImgEffects = (effectID) => {
+const updateSlider = () => {
+  effectLevelSlider.noUiSlider.updateOptions({
+    range: currentEffect.range,
+    start: currentEffect.start,
+    step: currentEffect.step,
+    connect: currentEffect.connect,
+    format: currentEffect.format
+  });
+};
+
+const setImgEffectPreview = () => {
   imgUploadPreview.classList.forEach((ImgClass) => {
     if (ImgClass.indexOf('effects__preview--') === 0) {
       imgUploadPreview.classList.remove(ImgClass);
     }
   });
 
-  imgUploadPreview.classList.add(EFFECTS[effectID]);
-
-  showSlider(effectID);
+  imgUploadPreview.classList.add(currentEffect.className);
 };
 
-effectList.addEventListener('click', (evt) => {
+const disableSlider = () => {
+  if (currentEffect.id === 'effect-none') {
+    effectLevelSlider.setAttribute('disabled', true);
+    return;
+  }
+  effectLevelSlider.removeAttribute('disabled');
+};
+
+const onEffectListClick = (evt) => {
   if (evt.target.closest('.effects__item')) {
     const effectID = evt.target.closest('.effects__item').querySelector('.effects__radio').id;
-    setImgEffects(effectID);
+    currentEffect = EFFECTS.find((element) => (element.id === effectID));
+    updateSlider();
+    setImgEffectPreview();
+    disableSlider();
   }
-});
+};
+
+const initEffectLevelSlider = () => {
+  currentEffect = EFFECTS.find((element) => (element.id === 'effect-none'));
+  createSlider();
+  setImgEffectPreview();
+  disableSlider();
+
+  effectLevelSlider.noUiSlider.on('update', onEffectLevelSliderUpdate);
+  effectLevelValue.value = currentEffect.start;
+  imgUploadPreview.style.filter = currentEffect.getScaleFilter(currentEffect.start);
+};
+
+export const initImgEditing = () => {
+  scaleControlInput.value = 100;
+  scaleControlSmallerBtn.addEventListener('click', onScaleControlSmallerBtnClick);
+  scaleControlBiggerBtn.addEventListener('click', onScaleControlBiggerBtnClick);
+  effectList.addEventListener('click', onEffectListClick);
+  initEffectLevelSlider();
+};
+
+export const removeImgEditingListeners = () => {
+  scaleControlSmallerBtn.removeEventListener('click', onScaleControlSmallerBtnClick);
+  scaleControlBiggerBtn.removeEventListener('click', onScaleControlBiggerBtnClick);
+  effectList.removeEventListener('click', onEffectListClick);
+  effectLevelSlider.noUiSlider.destroy();
+};
