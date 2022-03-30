@@ -1,6 +1,8 @@
 import { isEscapeKey, stopBubbling } from './util.js';
 import { FocusLock } from './focus-lock.js';
 import { initImgEditing, removeImgEditingListeners } from './img-editing.js';
+import { sendData } from './api.js';
+import { showErrorMessage, showSuccessMessage } from './alert-messages.js';
 
 const MAX_HASH_COUNTER = 5;
 const MAX_HASH_LENGTH = 20;
@@ -12,6 +14,7 @@ const imgPreview = document.querySelector('.img-upload__preview img');
 const effectNone = document.querySelector('#effect-none');
 const hashtagInput = document.querySelector('.text__hashtags');
 const commentTextarea = document.querySelector('.text__description');
+const imgUploadSubmitButton = document.querySelector('.img-upload__submit');
 
 const focusLock = new FocusLock;
 
@@ -61,13 +64,7 @@ CHECKLIST.forEach((check) => {
   pristine.addValidator(hashtagInput, check.validation, check.errorText);
 });
 
-const onUploadFormSubmit = (evt) => {
-  if (hashtagInput.value.length && !pristine.validate()) {
-    evt.preventDefault();
-  }
-};
-
-const onHashtagsInputKeydown= (evt) => {
+const onHashtagsInputKeydown = (evt) => {
   stopBubbling(evt);
 };
 
@@ -84,6 +81,8 @@ const closeModalWindow = () => {
   imgUploadContainer.classList.add('hidden');
   document.body.classList.remove('modal-open');
   imgPreview.src = '';
+  hashtagInput.value = '';
+  commentTextarea.value = '';
   removeModalListeners();
   clearImgUpload();
 };
@@ -92,6 +91,34 @@ const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeModalWindow();
+  }
+};
+
+const blockSubmitButton = () => {
+  imgUploadSubmitButton.disabled = true;
+};
+
+const unblockSubmitButton = () => {
+  imgUploadSubmitButton.disabled = false;
+};
+
+const onUploadFormSubmit = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    blockSubmitButton();
+    sendData(
+      () => {
+        closeModalWindow();
+        unblockSubmitButton();
+        showSuccessMessage();
+      },
+      () => {
+        unblockSubmitButton();
+        closeModalWindow();
+        showErrorMessage();
+      },
+      new FormData(evt.target)
+    );
   }
 };
 
@@ -118,7 +145,7 @@ const openModal = () => {
   focusLock.lock('.img-upload__overlay', false);
 };
 
-function removeModalListeners () {
+function removeModalListeners() {
   imgUploadContainer.removeEventListener('click', onModalClick);
   document.removeEventListener('keydown', onDocumentKeydown);
   hashtagInput.removeEventListener('keydown', onHashtagsInputKeydown);

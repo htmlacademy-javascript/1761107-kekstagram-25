@@ -1,4 +1,4 @@
-const createRandomNumber = (min, max) => {
+export const createRandomNumber = (min, max) => {
   if (min >= 0 && max >= 0 && min <= max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -7,7 +7,7 @@ const createRandomNumber = (min, max) => {
 
 const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
-const createNumberArray = (from, to) => {
+export const createNumberArray = (from, to) => {
   const array = [];
   for (let i = from; i <= to; i++) {
     array.push(i);
@@ -15,7 +15,7 @@ const createNumberArray = (from, to) => {
   return array;
 };
 
-const shuffleArray = (array) => {
+export const shuffleArray = (array) => {
   const newArray = [];
   while (array.length > 0) {
     const i = createRandomNumber(0, array.length - 1);
@@ -25,9 +25,9 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
-const isEscapeKey = (evt) => evt.key === 'Escape';
+export const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const stopBubbling = (evt) => {
+export const stopBubbling = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     evt.stopPropagation();
@@ -35,5 +35,3 @@ const stopBubbling = (evt) => {
 };
 
 checkStringLength('Hello, world!', 13);
-
-export {createRandomNumber, createNumberArray, shuffleArray, isEscapeKey, stopBubbling};

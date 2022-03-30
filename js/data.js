@@ -1,5 +1,7 @@
-import { createCards } from './cards.js';
+let cards = [];
 
-const cards = createCards();
+export const initCards = (newCards) => {
+  cards = newCards;
+};
 
-export { cards };
+export const getCards = () => cards;

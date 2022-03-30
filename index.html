@@ -50,7 +50,8 @@
                   <!-- Изменение размера изображения -->
                   <fieldset class="img-upload__scale  scale">
                     <button type="button" class="scale__control  scale__control--smaller">Уменьшить</button>
-                    <input type="text" class="scale__control  scale__control--value" value="100%" title="Image Scale" name="scale" readonly>
+                    <input type="text" class="scale__control  scale__control--value" value="100%" title="Image Scale"
+                      name="scale" readonly>
                     <button type="button" class="scale__control  scale__control--bigger">Увеличить</button>
                   </fieldset>
 
@@ -253,6 +254,16 @@
   <script src="nouislider/nouislider.js"></script>
   <script src="pristine/pristine.min.js"></script>
   <script type="module" src="js/main.js"></script>
+
+  <!-- Сообщение с ошибкой загрузки фотографий -->
+  <template id="upload-error-messages">
+    <section class="error">
+      <div class="success__inner error__inner_type_data">
+        <h2>Ошибка загрузки данных</h2>
+        <p></p>
+      </div>
+    </section>
+  </template>
 </body>
 
 </html>
