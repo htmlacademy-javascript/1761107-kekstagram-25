@@ -1,4 +1,4 @@
-import { cards } from './data.js';
+import { getCards } from './data.js';
 import { isEscapeKey, stopBubbling } from './util.js';
 import { FocusLock } from './focus-lock.js';
 
@@ -124,13 +124,11 @@ function removeModalListeners () {
   commentLoaderBtn.removeEventListener('click', onCommentLoaderBtnClick);
 }
 
-const fillBigPicture = (idCard) => {
-  const card = cards.find((element) => (element.id === idCard));
+export const fillBigPicture = (idCard) => {
+  const card = getCards().find((element) => (element.id === idCard));
   comments = card.comments;
   socialComments.innerHTML = '';
   fillBigPictureContainer(card);
   showComments(0, LOADABLE_COMMENTS_COUNT);
   openModal();
 };
-
-export { fillBigPicture };

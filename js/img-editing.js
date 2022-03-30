@@ -38,7 +38,8 @@ const EFFECTS = [
     },
     start: 1,
     step: 0.1,
-    connect: 'lower', format: {
+    connect: 'lower',
+    format: {
       to: (value) => value.toFixed(1),
       from: (value) => parseFloat(value)
     },
@@ -69,7 +70,8 @@ const EFFECTS = [
     },
     start: 100,
     step: 1,
-    connect: 'lower', format: {
+    connect: 'lower',
+    format: {
       to: (value) => value.toFixed(0),
       from: (value) => parseFloat(value)
     },
