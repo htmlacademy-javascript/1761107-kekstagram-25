@@ -3,7 +3,6 @@ import { getCards } from './data.js';
 
 const pictureTemplate = document.querySelector('#picture').content;
 const picturesContainer = document.querySelector('.pictures');
-const imgFilters = document.querySelector('.img-filters');
 
 const onPicturesContainerClick = (evt) => {
   const currentTarget = evt.target.closest('.picture');
@@ -35,9 +34,5 @@ export const fillPhotoGallery = () => {
   picturesContainer.addEventListener('click', onPicturesContainerClick);
 
   picturesContainer.querySelector('.pictures__title').after(listPhotos);
-};
-
-export const showFilters = () => {
-  imgFilters.classList.remove('img-filters--inactive');
 };
 
