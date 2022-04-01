@@ -102,22 +102,23 @@ const unblockSubmitButton = () => {
   imgUploadSubmitButton.disabled = false;
 };
 
+const onSendSuccess = () => {
+  closeModalWindow();
+  unblockSubmitButton();
+  showSuccessMessage();
+};
+
+const onSendError = () => {
+  unblockSubmitButton();
+  closeModalWindow();
+  showErrorMessage();
+};
+
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
     blockSubmitButton();
-    sendData(
-      () => {
-        closeModalWindow();
-        unblockSubmitButton();
-        showSuccessMessage();
-      },
-      () => {
-        unblockSubmitButton();
-        closeModalWindow();
-        showErrorMessage();
-      },
-      new FormData(evt.target)
+    sendData(onSendSuccess, onSendError, new FormData(evt.target)
     );
   }
 };

@@ -4,10 +4,12 @@ import { getCardsData } from './api.js';
 import { initCards } from './data.js';
 import { showUploadErrorMessage } from './alert-messages.js';
 
-getCardsData((cardsList) => {
+const onGetSuccess = (cardsList) => {
   initCards(cardsList);
   fillPhotoGallery();
   showFilters();
-}, showUploadErrorMessage);
+};
+
+getCardsData(onGetSuccess, showUploadErrorMessage);
 
 initUploading();
