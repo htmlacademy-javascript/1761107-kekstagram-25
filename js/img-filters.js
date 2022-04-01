@@ -1,9 +1,10 @@
 import { getCards } from './data.js';
 import { fillPhotoGallery } from './pictures.js';
-import { shuffleArray } from './util.js';
+import { shuffleArray, debounce } from './util.js';
 
 
 const COUNT_RANDOM_PICTURE = 10;
+const RERENDER_DELAY = 500;
 const imgFilters = document.querySelector('.img-filters');
 const imgFiltersBtnDefault = document.querySelector('#filter-default');
 const imgFiltersBtnRandom = document.querySelector('#filter-random');
@@ -28,26 +29,28 @@ const getRandomCards = () => {
 
 };
 
-const sortCardsDiscussed = () => {
-  return getCards().sort((cardA, cardB) => cardB.comments.length - cardA.comments.length);
+const sortCardsDiscussed = () => getCards().sort((cardA, cardB) => cardB.comments.length - cardA.comments.length);
+
+const updatePictures = (cards) => {
+  clearPicturesContainer();
+  fillPhotoGallery(cards);
 };
+
+const debouncedUpdatePictures = debounce(updatePictures, RERENDER_DELAY);
 
 const onImgFiltersBtnDefaultClick = (evt) => {
   setClassBtnActive(evt.target);
-  clearPicturesContainer();
-  fillPhotoGallery(getCards());
+  debouncedUpdatePictures(getCards());
 };
 
 const onImgFiltersBtnRandomClick = (evt) => {
   setClassBtnActive(evt.target);
-  clearPicturesContainer();
-  fillPhotoGallery(getRandomCards());
+  debouncedUpdatePictures(getRandomCards());
 };
 
 const onImgFiltersBtnDiscussedClick = (evt) => {
   setClassBtnActive(evt.target);
-  clearPicturesContainer();
-  fillPhotoGallery(sortCardsDiscussed());
+  debouncedUpdatePictures(sortCardsDiscussed());
 };
 
 export const showFilters = () => {
