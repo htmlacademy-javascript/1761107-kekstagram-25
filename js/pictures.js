@@ -1,5 +1,4 @@
 import { fillBigPicture } from './big-pictures.js';
-import { getCards } from './data.js';
 
 const pictureTemplate = document.querySelector('#picture').content;
 const picturesContainer = document.querySelector('.pictures');
@@ -23,10 +22,10 @@ const createPictureElement = ({ id, url, like, comments }) => {
   return pictureElement;
 };
 
-export const fillPhotoGallery = () => {
+export const fillPhotoGallery = (cards) => {
   const listPhotos = document.createDocumentFragment();
 
-  getCards().forEach((card) => {
+  cards.forEach((card) => {
     const pictureElement = createPictureElement(card);
     listPhotos.append(pictureElement);
   });

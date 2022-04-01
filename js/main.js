@@ -7,7 +7,7 @@ import { showUploadErrorMessage } from './alert-messages.js';
 
 const onGetSuccess = (cardsList) => {
   initCards(cardsList);
-  fillPhotoGallery();
+  fillPhotoGallery(cardsList);
   showFilters();
 };
 
