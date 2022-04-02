@@ -6,6 +6,7 @@ import { showErrorMessage, showSuccessMessage } from './alert-messages.js';
 
 const MAX_HASH_COUNTER = 5;
 const MAX_HASH_LENGTH = 20;
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const uploadFile = document.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('.img-upload__form');
@@ -102,22 +103,23 @@ const unblockSubmitButton = () => {
   imgUploadSubmitButton.disabled = false;
 };
 
+const onSendSuccess = () => {
+  closeModalWindow();
+  unblockSubmitButton();
+  showSuccessMessage();
+};
+
+const onSendError = () => {
+  unblockSubmitButton();
+  closeModalWindow();
+  showErrorMessage();
+};
+
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
   if (pristine.validate()) {
     blockSubmitButton();
-    sendData(
-      () => {
-        closeModalWindow();
-        unblockSubmitButton();
-        showSuccessMessage();
-      },
-      () => {
-        unblockSubmitButton();
-        closeModalWindow();
-        showErrorMessage();
-      },
-      new FormData(evt.target)
+    sendData(onSendSuccess, onSendError, new FormData(evt.target)
     );
   }
 };
@@ -156,8 +158,16 @@ function removeModalListeners() {
 
 const onUploadFileChange = (evt) => {
   evt.preventDefault();
-  imgPreview.src = URL.createObjectURL(evt.target.files[0]);
-  openModal();
+
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    imgPreview.src = URL.createObjectURL(file);
+    openModal();
+  }
 };
 
 export const initUploading = () => {
