@@ -26,8 +26,7 @@ export const fillPhotoGallery = (cards) => {
   const listPhotos = document.createDocumentFragment();
 
   cards.forEach((card) => {
-    const pictureElement = createPictureElement(card);
-    listPhotos.append(pictureElement);
+    listPhotos.append(createPictureElement(card));
   });
 
   picturesContainer.addEventListener('click', onPicturesContainerClick);

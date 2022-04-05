@@ -1,11 +1,10 @@
 import { isEscapeKey, stopBubbling } from './util.js';
 import { FocusLock } from './focus-lock.js';
 import { initImgEditing, removeImgEditingListeners } from './img-editing.js';
+import { initImgValidation, isValid } from './img-validation.js';
 import { sendData } from './api.js';
 import { showErrorMessage, showSuccessMessage } from './alert-messages.js';
 
-const MAX_HASH_COUNTER = 5;
-const MAX_HASH_LENGTH = 20;
 const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
 const uploadFile = document.querySelector('#upload-file');
@@ -18,52 +17,6 @@ const commentTextarea = document.querySelector('.text__description');
 const imgUploadSubmitButton = document.querySelector('.img-upload__submit');
 
 const focusLock = new FocusLock;
-
-const pristine = new Pristine(imgUploadForm, {
-  classTo: 'text__hashtags-container',
-  errorTextParent: 'text__hashtags-container',
-  errorTextTag: 'span',
-  errorTextClass: 'form__error'
-});
-
-const createHashtagsArray = (hashtagsString) => {
-  const newArray = hashtagsString.split(/\s* \s*/);
-  return newArray.filter((item) => item !== '');
-};
-
-const CHECKLIST = [
-  {
-    validation: (stringComments) => createHashtagsArray(stringComments).length <= MAX_HASH_COUNTER,
-    errorText: 'количество хэш-тегов не должно быть больше 5'
-  },
-  {
-    validation: (stringComments) => {
-      const hashtagsArray = createHashtagsArray(stringComments);
-      return new Set(hashtagsArray.map((item) => item.toLowerCase())).size === hashtagsArray.length;
-    },
-    errorText: 'хэш-теги не должны повторяться'
-  },
-  {
-    validation: (stringComments) => createHashtagsArray(stringComments).every((item) => item.startsWith('#')),
-    errorText: 'хэш-тег должен начинаться с #'
-  },
-  {
-    validation: (stringComments) => !createHashtagsArray(stringComments).includes('#'),
-    errorText: 'хэш-тег не может быть пустым'
-  },
-  {
-    validation: (stringComments) => createHashtagsArray(stringComments).every((item) => item.length <= MAX_HASH_LENGTH),
-    errorText: 'длина хэш-тега не должна превышать 20 символов'
-  },
-  {
-    validation: (stringComments) => createHashtagsArray(stringComments).every((item) => item.match(/^#[A-Za-zА-Яа-яЁё0-9]+$/) !== null),
-    errorText: 'хэш-тег может состоять только из букв и цифр'
-  }
-];
-
-CHECKLIST.forEach((check) => {
-  pristine.addValidator(hashtagInput, check.validation, check.errorText);
-});
 
 const onHashtagsInputKeydown = (evt) => {
   stopBubbling(evt);
@@ -117,10 +70,9 @@ const onSendError = () => {
 
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
-  if (pristine.validate()) {
+  if (isValid()) {
     blockSubmitButton();
-    sendData(onSendSuccess, onSendError, new FormData(evt.target)
-    );
+    sendData(onSendSuccess, onSendError, new FormData(evt.target));
   }
 };
 
@@ -144,6 +96,7 @@ const openModal = () => {
   document.body.classList.add('modal-open');
   addModalListeners();
   initImgEditing();
+  initImgValidation();
   focusLock.lock('.img-upload__overlay', false);
 };
 
@@ -158,13 +111,9 @@ function removeModalListeners() {
 
 const onUploadFileChange = (evt) => {
   evt.preventDefault();
-
   const file = evt.target.files[0];
-  const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
-
-  if (matches) {
+  if (FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it))) {
     imgPreview.src = URL.createObjectURL(file);
     openModal();
   }

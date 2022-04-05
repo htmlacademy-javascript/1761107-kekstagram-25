@@ -73,8 +73,7 @@ const updateCommentLoaderBtn = () => {
 
 const showComments = (from, to) => {
   displayedCommentsCount = Math.min(to, comments.length);
-  const displayedComments = comments.slice(from, displayedCommentsCount);
-  renderComments(displayedComments);
+  renderComments(comments.slice(from, displayedCommentsCount));
   socialCommentsCurrentCount.innerHTML =
     `${displayedCommentsCount} из <span class="comments-count">${comments.length}</span> комментариев`;
   updateCommentLoaderBtn();
