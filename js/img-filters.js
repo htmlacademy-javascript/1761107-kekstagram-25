@@ -2,7 +2,6 @@ import { getCards } from './data.js';
 import { fillPhotoGallery } from './pictures.js';
 import { shuffleArray, debounce } from './util.js';
 
-
 const COUNT_RANDOM_PICTURE = 10;
 const RERENDER_DELAY = 500;
 const imgFilters = document.querySelector('.img-filters');
@@ -23,13 +22,9 @@ const clearPicturesContainer = () => {
   });
 };
 
-const getRandomCards = () => {
-  const shuffleCards = shuffleArray(getCards().slice());
-  return shuffleCards.slice(0, COUNT_RANDOM_PICTURE);
+const getRandomCards = () => shuffleArray(getCards().slice()).slice(0, COUNT_RANDOM_PICTURE);
 
-};
-
-const sortCardsDiscussed = () => getCards().sort((cardA, cardB) => cardB.comments.length - cardA.comments.length);
+const sortCardsDiscussed = () => getCards().slice().sort((cardA, cardB) => cardB.comments.length - cardA.comments.length);
 
 const updatePictures = (cards) => {
   clearPicturesContainer();

@@ -9,8 +9,7 @@ let successContainer;
 
 export const showUploadErrorMessage = (err) => {
   const messageElement = UploadErrorMessageTemplate.cloneNode(true);
-  const textMessage = messageElement.querySelector('p');
-  textMessage.textContent = err;
+  messageElement.querySelector('p').textContent = err;
   bodyElement.append(messageElement);
 
   setTimeout(() => {
@@ -42,9 +41,8 @@ export const showErrorMessage = () => {
   const messageElement = errorTemplate.cloneNode(true);
   errorContainer = messageElement.querySelector('.error');
   bodyElement.append(errorContainer);
-
-  document.addEventListener('keydown', onDocumentKeydownError);
   errorContainer.addEventListener('click', onModalErrorClick);
+  document.addEventListener('keydown', onDocumentKeydownError);
 };
 
 const onModalSuccessClick = (evt) => {
