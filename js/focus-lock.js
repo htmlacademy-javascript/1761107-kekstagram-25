@@ -19,10 +19,10 @@ export class FocusLock {
     this._endElement = null;
     this._selectors = SELECTORS;
 
-    this._documentKeydownHandler = this._documentKeydownHandler.bind(this);
+    this._documentKeydownHandler = this.onDocumentKeydown.bind(this);
   }
 
-  _documentKeydownHandler(evt) {
+  onDocumentKeydown(evt) {
     const activeElement = document.activeElement;
     if (evt.key === 'Tab') {
       if (!this._focusableElements.length) {
@@ -67,7 +67,7 @@ export class FocusLock {
     if (startElement && startFocus) {
       startElement.focus();
     }
-    document.addEventListener('keydown', this._documentKeydownHandler);
+    document.addEventListener('keydown', this.onDocumentKeydown);
   }
 
   unlock(returnFocus = true) {
@@ -77,6 +77,6 @@ export class FocusLock {
     this._lockedSelector = null;
     this._focusableElements = null;
     this._endElement = null;
-    document.removeEventListener('keydown', this._documentKeydownHandler);
+    document.removeEventListener('keydown', this.onDocumentKeydown);
   }
 }

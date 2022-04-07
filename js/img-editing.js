@@ -1,17 +1,6 @@
 const MIN_VALUE_SCALE_CONTROL = 25;
 const MAX_VALUE_SCALE_CONTROL = 100;
 const STEP_SCALE = 25;
-
-const imgUploadPreview = document.querySelector('.img-upload__preview img');
-const scaleControlSmallerBtn = document.querySelector('.scale__control--smaller');
-const scaleControlBiggerBtn = document.querySelector('.scale__control--bigger');
-const scaleControlInput = document.querySelector('.scale__control--value');
-const effectLevelValue = document.querySelector('.effect-level__value');
-const effectLevelSlider = document.querySelector('.effect-level__slider');
-const effectList = document.querySelector('.effects__list');
-
-let currentEffect;
-
 const EFFECTS = [
   {
     id: 'effect-none',
@@ -111,6 +100,16 @@ const EFFECTS = [
   }
 ];
 
+const imgUploadPreview = document.querySelector('.img-upload__preview img');
+const scaleControlSmallerBtn = document.querySelector('.scale__control--smaller');
+const scaleControlBiggerBtn = document.querySelector('.scale__control--bigger');
+const scaleControlInput = document.querySelector('.scale__control--value');
+const effectLevelValue = document.querySelector('.effect-level__value');
+const effectLevelSlider = document.querySelector('.effect-level__slider');
+const effectList = document.querySelector('.effects__list');
+
+let currentEffect;
+
 const changeControlValue = (bigger = false) => {
   const currentScaleValue = parseInt(scaleControlInput.value, 10);
 
@@ -203,6 +202,7 @@ const initEffectLevelSlider = () => {
 
 export const initImgEditing = () => {
   scaleControlInput.value = '100 %';
+  imgUploadPreview.style.transform = null;
   scaleControlSmallerBtn.addEventListener('click', onScaleControlSmallerBtnClick);
   scaleControlBiggerBtn.addEventListener('click', onScaleControlBiggerBtnClick);
   effectList.addEventListener('click', onEffectListClick);

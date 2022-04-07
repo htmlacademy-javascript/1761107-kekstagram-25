@@ -5,24 +5,14 @@ export const createRandomNumber = (min, max) => {
   return 'Введите число в установленном диапазоне';
 };
 
-const checkStringLength = (string, maxLength) => string.length <= maxLength;
-
-export const createNumberArray = (from, to) => {
-  const array = [];
-  for (let i = from; i <= to; i++) {
-    array.push(i);
+export const shuffleArray = (items) => {
+  const newItems = [];
+  while (items.length > 0) {
+    const i = createRandomNumber(0, items.length - 1);
+    newItems.push(items[i]);
+    items.splice(i, 1);
   }
-  return array;
-};
-
-export const shuffleArray = (array) => {
-  const newArray = [];
-  while (array.length > 0) {
-    const i = createRandomNumber(0, array.length - 1);
-    newArray.push(array[i]);
-    array.splice(i, 1);
-  }
-  return newArray;
+  return newItems;
 };
 
 export const isEscapeKey = (evt) => evt.key === 'Escape';
@@ -41,5 +31,3 @@ export function debounce (callback, timeoutDelay = 500) {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 }
-
-checkStringLength('Hello, world!', 13);

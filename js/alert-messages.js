@@ -1,14 +1,14 @@
 import { isEscapeKey } from './util.js';
 const ALERT_SHOW_TIME = 5000;
 const bodyElement = document.querySelector('body');
-const UploadErrorMessageTemplate = document.querySelector('#upload-error-messages').content;
+const uploadErrorMessageTemplate = document.querySelector('#upload-error-messages').content;
 const successTemplate = document.querySelector('#success').content;
 const errorTemplate = document.querySelector('#error').content;
 let errorContainer;
 let successContainer;
 
 export const showUploadErrorMessage = (err) => {
-  const messageElement = UploadErrorMessageTemplate.cloneNode(true);
+  const messageElement = uploadErrorMessageTemplate.cloneNode(true);
   messageElement.querySelector('p').textContent = err;
   bodyElement.append(messageElement);
 
